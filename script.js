@@ -2,6 +2,7 @@ let c = (n) => document.querySelector(n);
 let ca = (n) => document.querySelectorAll(n);
 
 let modalQt = 1
+let cart=[]
 
 pizzaJson.map((item, index)=>{
     let pizzaItem = c(".models .pizza-item").cloneNode(true);
@@ -19,6 +20,7 @@ pizzaJson.map((item, index)=>{
         e.preventDefault()
         modalQt = 1;
         let key = pizzaItem.getAttribute('data-key') //pego a pizza clicada
+        c('.pizzaInfo--qt').innerHTML = modalQt
         
         c('.pizzaWindowArea').style.opacity = 0
         c('.pizzaWindowArea').style.display = 'flex'
@@ -40,8 +42,7 @@ pizzaJson.map((item, index)=>{
                 size.classList.add('selected')
             }
             size.querySelector('span').innerHTML = pizzaJson[key].sizes[sizeIndex];
-        })
-               
+        })  
 
 
 })
@@ -53,12 +54,36 @@ pizzaJson.map((item, index)=>{
 //eventos
  function closeModal(){
     c('.pizzaWindowArea').style.opacity = 0
+    console.log('modal a fechar'+modalQt)
     setTimeout(()=>{ //timout para aparecer a animação
         c('.pizzaWindowArea').style.display = 'none'
           
     }, 500)
  }
 
+ //botão de cancelar mobile e pc
  ca('.pizzaInfo--cancelButton, .pizzaInfo--cancelMobileButton').forEach((button)=>{
     button.addEventListener('click', closeModal)
  })
+
+ //botões de aumentar e diminuir a quantidade
+ c('.pizzaInfo--qtmais').addEventListener('click', ()=>{
+    modalQt++
+    c('.pizzaInfo--qt').innerHTML = modalQt
+})   
+
+c('.pizzaInfo--qtmenos').addEventListener('click', ()=>{
+    if (modalQt > 1){
+        modalQt--
+        c('.pizzaInfo--qt').innerHTML = modalQt
+    }
+    
+})
+
+//alterar o tamanho
+ca('.pizzaInfo--size').forEach((size, sizeIndex)=>{
+    size.addEventListener('click',(e)=>{
+        c('.pizzaInfo--size.selected').classList.remove('selected'); 
+        size.classList.add('selected')
+    })
+})
