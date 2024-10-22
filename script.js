@@ -22,6 +22,7 @@ pizzaJson.map((item, index)=>{
         
         c('.pizzaWindowArea').style.opacity = 0
         c('.pizzaWindowArea').style.display = 'flex'
+
         setTimeout(()=>{ //timout para aparecer a animação
             c('.pizzaWindowArea').style.opacity = 1
         }, 500)
@@ -32,16 +33,32 @@ pizzaJson.map((item, index)=>{
         c('.pizzaInfo--desc').innerHTML = pizzaJson[key].description;
         c('.pizzaInfo--actualPrice').innerHTML =`R$ ${pizzaJson[key].price[2].toFixed(2) }`;
 
+        //removendo o tamanho selecionado anteriormente e definindo como garnde
+        c('.pizzaInfo--size.selected').classList.remove('selected'); 
         ca('.pizzaInfo--size').forEach((size, sizeIndex)=>{
-            
+            if (sizeIndex == 2){
+                size.classList.add('selected')
+            }
             size.querySelector('span').innerHTML = pizzaJson[key].sizes[sizeIndex];
         })
+               
+
 
 })
-        
-
-
     //add na tela
     c(".pizza-area").append(pizzaItem)
 
 })
+
+//eventos
+ function closeModal(){
+    c('.pizzaWindowArea').style.opacity = 0
+    setTimeout(()=>{ //timout para aparecer a animação
+        c('.pizzaWindowArea').style.display = 'none'
+          
+    }, 500)
+ }
+
+ ca('.pizzaInfo--cancelButton, .pizzaInfo--cancelMobileButton').forEach((button)=>{
+    button.addEventListener('click', closeModal)
+ })
