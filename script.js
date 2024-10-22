@@ -3,6 +3,7 @@ let ca = (n) => document.querySelectorAll(n);
 
 let modalQt = 1
 let cart=[]
+let modalKey = 0;
 
 pizzaJson.map((item, index)=>{
     let pizzaItem = c(".models .pizza-item").cloneNode(true);
@@ -20,6 +21,7 @@ pizzaJson.map((item, index)=>{
         e.preventDefault()
         modalQt = 1;
         let key = pizzaItem.getAttribute('data-key') //pego a pizza clicada
+        modalKey = key
         c('.pizzaInfo--qt').innerHTML = modalQt
         
         c('.pizzaWindowArea').style.opacity = 0
@@ -54,7 +56,6 @@ pizzaJson.map((item, index)=>{
 //eventos
  function closeModal(){
     c('.pizzaWindowArea').style.opacity = 0
-    console.log('modal a fechar'+modalQt)
     setTimeout(()=>{ //timout para aparecer a animação
         c('.pizzaWindowArea').style.display = 'none'
           
@@ -85,5 +86,47 @@ ca('.pizzaInfo--size').forEach((size, sizeIndex)=>{
     size.addEventListener('click',(e)=>{
         c('.pizzaInfo--size.selected').classList.remove('selected'); 
         size.classList.add('selected')
+
+        //alterando o valor
+        let priceIndex = c('.pizzaInfo--size.selected').getAttribute('data-key')
+        c('.pizzaInfo--actualPrice').innerHTML =`R$ ${pizzaJson[modalKey].price[priceIndex].toFixed(2) }`
+        
     })
 })
+
+//add ao carrinho
+c('.pizzaInfo--addButton').addEventListener('click', ()=>{
+    let size = parseInt(c('.pizzaInfo--size.selected').getAttribute('data-key'));
+    let id = `${pizzaJson[modalQt].id}@${size}`
+
+    let key = cart.findIndex(item=> item.id == id)
+
+    if(key > -1){
+        cart[key].qt += modalQt
+    }else{
+        cart.push({
+            id,
+            pizza: modalKey,
+            size,
+            qt: modalQt,
+        })
+    }
+    console.log(cart)
+    closeModal()
+    updateCart()
+
+})
+
+//exibição do carrinho
+function updateCart(){
+    if(cart.length > 0){
+        c('aside').classList.add('show')
+
+        for(let i in cart){
+            let pizzaItem = pizzaJson.find(item=> item.id == cart[i].id)
+            console.log(pizzaItem)
+        }
+    }else{
+
+    }
+}
